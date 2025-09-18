@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toko Aksesoris - Cantik & Aktif</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #fff8fb;
+      --card: #ffffff;
+      --muted: #9b8ca6;
+      --accent: #ff7ab6; /* pink */
+      --accent-2: #7ad3ff; /* blue accent */
+      --shadow: 0 8px 24px rgba(98, 40, 93, 0.08);
+      --radius: 14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, var(--bg) 0%, #fff 60%);
+      color:#2b2b2b;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:32px;
+    }
+
+    /* nav */
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      max-width:1200px;
+      margin:0 auto 28px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:54px;height:54px;border-radius:12px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:white;font-weight:700;font-family:'Playfair Display';font-size:18px;box-shadow:var(--shadow)
+    }
+    .brand h1{margin:0;font-size:18px}
+    .controls{display:flex;align-items:center;gap:12px}
+    .search{
+      display:flex;align-items:center;background:#fff;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);gap:8px;
+    }
+    .search input{border:0;outline:none;background:transparent;font-size:14px}
+
+    .cart-btn{background:transparent;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;position:relative}
+    .cart-count{position:absolute;right:6px;top:6px;background:var(--accent);color:white;border-radius:999px;padding:4px 7px;font-size:12px;font-weight:600}
+
+    /* hero */
+    .hero{
+      max-width:1200px;margin:0 auto 28px;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;
+    }
+    .hero-card{background:var(--card);padding:28px;border-radius:20px;box-shadow:var(--shadow)}
+    .hero h2{font-family:'Playfair Display';margin:0 0 8px;font-size:28px}
+    .hero p{color:var(--muted);margin:0 0 16px}
+    .cta{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;background:linear-gradient(90deg,var(--accent),#ff91c9);color:white;border:0;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(255,122,182,0.18);transform:translateY(0);transition:transform .16s ease}
+    .cta:active{transform:translateY(1px) scale(.998)}
+
+    /* grid */
+    .grid-wrap{max-width:1200px;margin:0 auto}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .chip{padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(43,43,43,0.06);cursor:pointer}
+    .chip.active{background:linear-gradient(90deg, rgba(255,122,182,0.12), rgba(122,211,255,0.06));border-color:transparent}
+
+    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .card{background:var(--card);border-radius:16px;padding:12px;box-shadow:var(--shadow);transition:transform .22s ease, box-shadow .22s ease}
+    .card:hover{transform:translateY(-8px);box-shadow:0 18px 44px rgba(98, 40, 93, 0.12)}
+    .img-wrap{height:220px;border-radius:12px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(180deg,#fff,#fff0)}
+    .img-wrap img{max-width:86%;max-height:86%;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(122,50,120,0.06))}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .title{font-weight:600}
+    .price{font-weight:700;color:var(--accent)}
+
+    .actions{display:flex;gap:8px;margin-top:12px}
+    .btn{flex:1;padding:10px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;border:1px solid rgba(43,43,43,0.08)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#ff91c9);color:white;box-shadow:0 8px 20px rgba(255,122,182,0.15)}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.show{display:flex}
+    .modal .panel{width:100%;max-width:680px;background:var(--card);border-radius:16px;padding:20px;box-shadow:0 30px 80px rgba(20,20,20,0.12)}
+
+    /* responsive */
+    @media(max-width:1000px){
+      .hero{grid-template-columns:1fr}
+      .products{grid-template-columns:repeat(2,1fr)}
+      body{padding:20px}
+    }
+    @media(max-width:560px){
+      .products{grid-template-columns:1fr}
+      .nav{flex-direction:column;align-items:flex-start;gap:12px}
+      .search{width:100%}
+    }
+
+    /* small utilities */
+    .badge{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(122,211,255,0.12);font-weight:700;color:var(--accent-2)}
+    .center{text-align:center}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <h1>Toko Aksesoris</h1>
+        <div style="font-size:12px;color:var(--muted)">Aksesoris wanita — cantik & aktif</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#b9a9c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="#b9a9c0" stroke-width="2"></circle></svg>
+        <input id="q" placeholder="Cari kalung, anting, gelang..." />
+      </div>
+      <button class="cart-btn" id="cartBtn">Cart <span class="cart-count" id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <h2>Produk pilihan minggu ini</h2>
+        <p>Temukan koleksi aksesoris wanita—kalung, anting, gelang—dengan desain elegan dan aktif (interaktif) untuk gaya sehari-hari.</p>
+        <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+          <button class="cta" onclick="openFilter()">Belanja Sekarang</button>
+          <button class="chip" onclick="showFavorites()">Favorit</button>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px">
+        <div class="hero-card center">
+          <div style="font-size:13px;color:var(--muted)">Gratis ongkir untuk pembelian > Rp200.000</div>
+          <div style="font-size:28px;font-weight:700;color:var(--accent);margin-top:8px">SALE 20% OFF</div>
+          <div style="margin-top:10px">Kode: <span class="badge">CANTIK20</span></div>
+        </div>
+        <div class="hero-card center">
+          <div style="font-size:13px;color:var(--muted)">Metode pembayaran</div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+            <div class="chip">Dana</div><div class="chip">Gopay</div><div class="chip">Transfer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-wrap">
+      <div class="filters">
+        <button class="chip active" onclick="filterCategory('All', this)">Semua</button>
+        <button class="chip" onclick="filterCategory('Kalung', this)">Kalung</button>
+        <button class="chip" onclick="filterCategory('Anting', this)">Anting</button>
+        <button class="chip" onclick="filterCategory('Gelang', this)">Gelang</button>
+        <button class="chip" onclick="filterCategory('Ring', this)">Cincin</button>
+      </div>
+
+      <div class="products" id="products">
+        <!-- cards rendered by JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- modal detail -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h3 id="mdTitle">Judul Produk</h3>
+          <div id="mdCategory" style="color:var(--muted);font-size:13px">Kategori</div>
+        </div>
+        <button onclick="closeModal()" class="chip">Tutup</button>
+      </div>
+      <div style="display:flex;gap:18px;margin-top:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:220px" id="mdImgWrap"></div>
+        <div style="flex:1;min-width:220px">
+          <p id="mdDesc" style="color:var(--muted)"></p>
+          <div style="font-size:20px;font-weight:700;color:var(--accent);margin-top:8px" id="mdPrice">Rp0</div>
+          <div style="margin-top:16px;display:flex;gap:10px">
+            <button class="btn ghost" onclick="toggleFavorite()" id="favBtn">♡ Favorit</button>
+            <button class="btn primary" onclick="addToCart(true)">Tambah ke Keranjang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const productsEl = document.getElementById('products');
+    const cartCountEl = document.getElementById('cartCount');
+    const modal = document.getElementById('modal');
+
+    let cart = 0;
+    const products = [
+      {id:1,name:'Kalung Mutiara Mini',category:'Kalung',price:125000,img:'https://images.unsplash.com/photo-1556228720-20f3f6c2c6b0?auto=format&fit=crop&w=800&q=60',desc:'Kalung mutiara sederhana cocok untuk sehari-hari.'},
+      {id:2,name:'Anting Hoop Elegan',category:'Anting',price:95000,img:'https://images.unsplash.com/photo-1520975681919-4f2b1f6d8d3b?auto=format&fit=crop&w=800&q=60',desc:'Hoop ringan dengan lapisan emas.'},
+      {id:3,name:'Gelang Charm',category:'Gelang',price:78000,img:'https://images.unsplash.com/photo-1542977273-94b0c9d7b59b?auto=format&fit=crop&w=800&q=60',desc:'Gelang charm lucu, bingkai stainless steel.'},
+      {id:4,name:'Cincin Simple',category:'Ring',price:68000,img:'https://images.unsplash.com/photo-1560347876-aeef00ee58a1?auto=format&fit=crop&w=800&q=60',desc:'Cincin minimalis untuk tampilan elegan.'},
+      {id:5,name:'Kalung Layered',category:'Kalung',price:150000,img:'https://images.unsplash.com/photo-1600180758890-8b1f6d2f3f6b?auto=format&fit=crop&w=800&q=60',desc:'Set dua kalung berlapis untuk gaya modern.'},
+      {id:6,name:'Anting Kristal',category:'Anting',price:115000,img:'https://images.unsplash.com/photo-1523381212578-9f0b4a9a6b3b?auto=format&fit=crop&w=800&q=60',desc:'Anting bertatah kristal menyerupai bintang.'},
+      {id:7,name:'Gelang Rantai',category:'Gelang',price:88000,img:'https://images.unsplash.com/photo-1520975691511-02996a9f3a5b?auto=format&fit=crop&w=800&q=60',desc:'Gelang rantai tipis, cocok dipakai berlapis.'},
+      {id:8,name:'Cincin Vintage',category:'Ring',price:132000,img:'https://images.unsplash.com/photo-1505765058010-5d1b9b1a6a7f?auto=format&fit=crop&w=800&q=60',desc:'Cincin bergaya vintage dengan aksen ukiran.'}
+    ];
+
+    function formatIDR(n){return 'Rp'+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+
+    function renderProducts(list){
+      productsEl.innerHTML='';
+      list.forEach(p=>{
+        const div = document.createElement('div');div.className='card';
+        div.innerHTML = `
+          <div class="img-wrap"><img src="${p.img}" alt="${p.name}"></div>
+          <div class="meta"><div class="title">${p.name}</div><div class="price">${formatIDR(p.price)}</div></div>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px">${p.category}</div>
+          <div class="actions">
+            <button class="btn ghost" onclick='openDetail(${p.id})'>Lihat</button>
+            <button class="btn primary" onclick='addToCart(false,${p.id})'>Tambah</button>
+          </div>
+        `;
+        productsEl.appendChild(div);
+      })
+    }
+
+    renderProducts(products);
+
+    function addToCart(fromModal,id){
+      if(id){ /* from product card */ }
+      cart += 1;
+      cartCountEl.textContent = cart;
+      // small feedback
+      const btn = document.querySelector('.cart-btn');
+      btn.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)'},{transform:'translateY(0)'}],{duration:350,easing:'ease-out'});
+      if(fromModal) closeModal();
+    }
+
+    function openDetail(id){
+      const p = products.find(x=>x.id===id);
+      if(!p) return;
+      document.getElementById('mdTitle').textContent = p.name;
+      document.getElementById('mdCategory').textContent = p.category;
+      document.getElementById('mdDesc').textContent = p.desc;
+      document.getElementById('mdPrice').textContent = formatIDR(p.price);
+      document.getElementById('mdImgWrap').innerHTML = <div class=\"img-wrap\" style=\"height:280px\"><img src=\"${p.img}\" alt=\"${p.name}\"></div>;
+      modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
+
+    function filterCategory(cat,el){
+      document.querySelectorAll('.filters .chip').forEach(c=>c.classList.remove('active'));
+      el.classList.add('active');
+      if(cat==='All') renderProducts(products);
+      else renderProducts(products.filter(p=>p.category===cat));
+    }
+
+    // search interactively (aktif)
+    document.getElementById('q').addEventListener('input', (e)=>{
+      const q = e.target.value.toLowerCase();
+      const filtered = products.filter(p=>p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+      renderProducts(filtered);
+    });
+
+    // small helpers
+    function openFilter(){ document.querySelector('.chip').scrollIntoView({behavior:'smooth'}); }
+    function showFavorites(){ alert('Fitur favorit belum terhubung — contoh interaktif!'); }
+    function toggleFavorite(){ const b = document.getElementById('favBtn'); b.textContent = b.textContent.includes('♡') ? '♥ Favorit' : '♡ Favorit'; }
+
+    // keyboard accessibility: ESC to close modal
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal(); })
+  </script>
+</body>
+</html>
